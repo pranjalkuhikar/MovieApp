@@ -10,11 +10,12 @@ import TvDetails from "./Components/TvDetails";
 import PeopleDetails from "./Components/PeopleDetails";
 import Trailer from "./Components/Template/Trailer";
 import NotFound from "./Components/NotFound";
+import Layout from "./Components/Template/Layout";
 
 function App() {
   return (
-    <div className="relative w-screen h-screen bg-zinc-800 flex justify-start">
-      <Routes>
+    <Routes>
+      <Route element={<Layout />}>
         <Route path="/" element={<Home />} />
         <Route path="/trending" element={<Trending />} />
         <Route path="/popular" element={<Popular />} />
@@ -28,9 +29,9 @@ function App() {
         </Route>
         <Route path="/people" element={<People />} />
         <Route path="/people/details/:id" element={<PeopleDetails />} />
-        <Route path="*" element={<NotFound />} />
-      </Routes>
-    </div>
+      </Route>
+      <Route path="*" element={<NotFound />} />
+    </Routes>
   );
 }
 

@@ -10,6 +10,7 @@ import { FaSquareXTwitter } from "react-icons/fa6";
 import { SiWikidata } from "react-icons/si";
 import HorizonalCards from "./Template/HorizonalCards";
 import DropDown from "../Components/Template/DropDown";
+
 function PeopleDetails() {
   const { id } = useParams();
   const { info } = useSelector((state) => state.people);
@@ -22,133 +23,138 @@ function PeopleDetails() {
       dispatch(removePeople());
     };
   }, [id]);
-  return info ? (
-    <div className="relative h-fit lg:px-40 sm:px-20 p-[2%] overflow-x-hidden bg-[#27272A]">
-      {/* Part-1 (Navigation) */}
-      <nav className="w-full flex items-center gap-5">
-        <h1 className="text-white text-2xl font-semibold flex items-center gap-5">
-          <FaArrowLeft
+
+  if (!info) return <Loading />;
+
+  const { detail, externalid, combinedCredits, movieCredits, tvCredits } = info;
+
+  return (
+    <div className="min-h-screen bg-zinc-900">
+      {/* Hero Section */}
+      <div className="relative min-h-[60vh] flex items-center justify-center bg-gradient-to-b from-zinc-900 to-zinc-800">
+        <div className="absolute top-0 left-0 p-4">
+          <button
             onClick={() => navigate(-1)}
-            className="hover:text-[#18181B] rounded-full hover:bg-white duration-300 w-12 h-12 p-1"
-          />
-        </h1>
-      </nav>
-      {/* Part-2  (Personal Info)*/}
-      <div className="w-full lg:flex md:flex items-center gap-10 mt-14">
-        <img
-          className="h-[50vh] object-cover object-[50%,20%] mx-auto rounded-xl mb-1"
-          src={`https://image.tmdb.org/t/p/original${info.detail.profile_path}`}
-          alt=""
-        />
-        <div className="text-white font-semibold max-sm:px-14">
-          <h1 className="lg:text-6xl max-md:text-4xl max-sm:text-3xl sm:mt-5 mb-5">
-            {info.detail.title ||
-              info.detail.name ||
-              info.detail.original_name ||
-              info.detail.original_title}
-          </h1>
-          <div className="flex flex-col ">
-            <h1 className="lg:text-2xl md:text-xl sm:text-lg text-zinc-100">
-              DOB: &nbsp;
-              <span className="lg:text-xl md:text-lg sm:text-md text-zinc-400">
-                {info.detail.birthday}
-              </span>
+            className="p-2 hover:bg-black/20 rounded-full transition-colors"
+          >
+            <FaArrowLeft className="w-6 h-6 text-white" />
+          </button>
+        </div>
+        <div className="max-w-5xl w-full mx-auto px-4 py-12 flex flex-col md:flex-row items-center gap-10">
+          {/* Profile Image */}
+          <div className="w-56 flex-shrink-0 mx-auto md:mx-0">
+            <img
+              src={
+                detail.profile_path
+                  ? `https://image.tmdb.org/t/p/w500${detail.profile_path}`
+                  : "/Noimg.jpg"
+              }
+              alt={detail.name || detail.title || "Profile"}
+              className="w-full rounded-xl shadow-lg object-cover"
+            />
+          </div>
+          {/* Info */}
+          <div className="flex-1 text-white">
+            <h1 className="text-4xl md:text-5xl font-bold mb-2">
+              {detail.name || detail.title}
             </h1>
-            <h1 className="lg:text-2xl md:text-xl sm:text-lg text-zinc-100">
-              Profession : &nbsp;
-              <span className="lg:text-xl md:text-lg sm:text-md text-zinc-400">
-                {info.detail.known_for_department}
+            <div className="flex flex-wrap gap-4 mb-4">
+              <span className="px-3 py-1 bg-blue-500 text-white rounded-full text-sm">
+                {detail.known_for_department || "N/A"}
               </span>
-            </h1>
-            <h1 className="lg:text-2xl md:text-xl sm:text-lg text-zinc-100">
-              Gender : &nbsp;
-              <span className="lg:text-xl md:text-lg sm:text-md text-zinc-400">
-                {info.detail.gender === 2 ? "Male" : "Female"}
+              <span className="px-3 py-1 bg-zinc-800 text-zinc-300 rounded-full text-sm">
+                {detail.gender === 2
+                  ? "Male"
+                  : detail.gender === 1
+                  ? "Female"
+                  : "Other"}
               </span>
-            </h1>
-            <h1 className="lg:text-2xl md:text-xl sm:text-lg text-zinc-100">
-              Also Know As : &nbsp;
-              <span className="lg:text-xl md:text-lg sm:text-md text-zinc-400">
-                {info.detail.also_known_as.join(", ")}
+              <span className="px-3 py-1 bg-zinc-800 text-zinc-300 rounded-full text-sm">
+                DOB: {detail.birthday || "N/A"}
               </span>
-            </h1>
-            <h1 className="lg:text-2xl md:text-xl sm:text-lg text-zinc-100 ">
-              Biography: &nbsp;
-              <span className="lg:text-xl md:text-lg sm:text-md text-zinc-400 text-justify">
-                {info.detail.biography.slice(0, 550)}
+            </div>
+            <div className="mb-2">
+              <span className="font-semibold text-zinc-400">
+                Also Known As:{" "}
               </span>
-            </h1>
+              <span className="text-zinc-200">
+                {detail.also_known_as && detail.also_known_as.length > 0
+                  ? detail.also_known_as.join(", ")
+                  : "N/A"}
+              </span>
+            </div>
+            <div className="mb-4">
+              <span className="font-semibold text-zinc-400">Biography: </span>
+              <span className="text-zinc-200">
+                {detail.biography
+                  ? detail.biography.slice(0, 600)
+                  : "No biography available."}
+              </span>
+            </div>
+            {/* Social Links */}
+            <div className="flex gap-4 mt-4">
+              {externalid?.wikidata_id && (
+                <a
+                  target="_blank"
+                  href={`https://www.wikidata.org/wiki/${externalid.wikidata_id}`}
+                >
+                  <SiWikidata className="w-8 h-8 text-white hover:text-blue-400 transition-colors" />
+                </a>
+              )}
+              {externalid?.facebook_id && (
+                <a
+                  target="_blank"
+                  href={`https://www.facebook.com/${externalid.facebook_id}`}
+                >
+                  <FaFacebookSquare className="w-8 h-8 text-white hover:text-blue-400 transition-colors" />
+                </a>
+              )}
+              {externalid?.instagram_id && (
+                <a
+                  target="_blank"
+                  href={`https://www.instagram.com/${externalid.instagram_id}`}
+                >
+                  <RiInstagramFill className="w-8 h-8 text-white hover:text-blue-400 transition-colors" />
+                </a>
+              )}
+              {externalid?.twitter_id && (
+                <a
+                  target="_blank"
+                  href={`https://twitter.com/${externalid.twitter_id}`}
+                >
+                  <FaSquareXTwitter className="w-8 h-8 text-white hover:text-blue-400 transition-colors" />
+                </a>
+              )}
+            </div>
           </div>
         </div>
       </div>
-      {/* Part-3 (Social Icons)*/}
-      <div className="w-full mt-3 text-white flex gap-9 bg-[#27272A]">
-        <a
-          target="_blank"
-          href={`https://www.wikidata.org/wiki/${info.externalid.wikidata_id}`}
-        >
-          <SiWikidata className="duration-300 w-12 h-12 py-1" />
-        </a>
-        <a
-          target="_blank"
-          href={`https://www.facebook.com/${info.externalid.facebook_id}`}
-        >
-          <FaFacebookSquare className="duration-300 w-12 h-12 py-1" />
-        </a>
-        <a
-          target="_blank"
-          href={`https://www.instagram.com/${info.externalid.instagram_id}`}
-        >
-          <RiInstagramFill className="duration-300 w-12 h-12 py-1" />
-        </a>
-        <a
-          target="_blank"
-          href={`https://twitter.com/${info.externalid.twitter_id}`}
-        >
-          <FaSquareXTwitter className="duration-300 w-12 h-12 py-1" />
-        </a>
+
+      {/* Credits Section */}
+      <div className="max-w-7xl mx-auto px-4 py-8">
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="text-2xl font-bold text-white">Movies & Shows</h2>
+          <DropDown
+            title="Category"
+            options={["movie", "tv"]}
+            func={(e) => setCategory(e.target.value)}
+          />
+        </div>
+        <HorizonalCards data={info[category + "Credits"].cast} />
       </div>
-      {/* Part-4 (Cast) */}
-      <div className="mt-12">
-        <h1 className="lg:text-4xl md:text-xl sm:text-lg text-zinc-100">
-          Cast: &nbsp;
-        </h1>
-        <HorizonalCards data={info.combinedCredits.cast} />
-      </div>
-      {/* Part-4 (Acting) */}
-      <div className="flex justify-between items-center mt-12">
-        <h1 className="lg:text-4xl md:text-xl sm:text-lg text-zinc-100">
-          Movies and shows: &nbsp;
-        </h1>
-        <DropDown
-          title="Category"
-          options={["tv", "movie"]}
-          func={(e) => setCategory(e.target.value)}
-        />
-      </div>
-      <div className="list-disc text-zinc-400 w-full h-[50vh] mt-5 overflow-x-hidden overflow-y-auto shadow-2xl shadow-[rgba(255,255,255,0.3)] border-2 border-zinc-500 p-10]">
-        {info[category + "Credits"].cast.map((item, index) => (
-          <li
-            key={index}
-            className="hover:text-white p-5 rounded hover:bg-[#19191d] duration-300 cursor-pointer"
-          >
-            <Link to={`/${category}/details/${item.id}`}>
-              <span>
-                {item.title ||
-                  item.name ||
-                  item.original_name ||
-                  item.original_title}
-              </span>
-              <span className="block ml-5 mt-2">
-                {item.character && `Charater Name: ${item.character}`}
-              </span>
-            </Link>
-          </li>
-        ))}
-      </div>
+
+      {/* Combined Credits (Cast) */}
+      {combinedCredits &&
+        combinedCredits.cast &&
+        combinedCredits.cast.length > 0 && (
+          <div className="max-w-7xl mx-auto px-4 py-8">
+            <h2 className="text-2xl font-bold text-white mb-6">
+              Cast Highlights
+            </h2>
+            <HorizonalCards data={combinedCredits.cast} />
+          </div>
+        )}
     </div>
-  ) : (
-    <Loading />
   );
 }
 

@@ -21,7 +21,8 @@ export const MovieActions = (id) => async (dispatch, getState) => {
     };
     dispatch(loadMovie(theUltimateDetails));
   } catch (error) {
-    console.log(error);
+    console.error("[MovieActions] API error:", error, "ID:", id);
+    alert("Failed to load movie details. Check the console for more info.");
   }
 };
 export { removeMovie } from "../Reducers/MovieSlice";

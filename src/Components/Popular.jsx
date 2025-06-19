@@ -1,6 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { FaArrowLeft } from "react-icons/fa6";
-import Topnav from "./Template/Topnav";
 import { useNavigate } from "react-router-dom";
 import DropDown from "./Template/DropDown";
 import axios from "../Utiles/Axios";
@@ -8,6 +7,7 @@ import { useEffect, useState } from "react";
 import Cards from "./Template/Cards";
 import Loading from "./Loading";
 import InfiniteScroll from "react-infinite-scroll-component";
+
 function Popular() {
   document.title = "Movie App | Popular";
   const navigate = useNavigate();
@@ -31,13 +31,12 @@ function Popular() {
   };
 
   const refreshHandler = () => {
-    if (popular.length === 0) {
+    setHasMore(true);
+    setPage(1);
+    setPopular([]);
+    setTimeout(() => {
       GetPopular();
-    } else {
-      setPage(1);
-      setPopular([]);
-      GetPopular();
-    }
+    }, 0);
   };
 
   useEffect(() => {
@@ -45,30 +44,42 @@ function Popular() {
   }, [category]);
 
   return popular.length > 0 ? (
-    <div className="w-screen h-screen">
-      <div className="px-[2%] flex items-center justify-center gap-5 ">
-        <h1 className="text-white text-2xl font-semibold flex items-center gap-5">
-          <FaArrowLeft
+    <div className="min-h-screen bg-zinc-900 pb-8">
+      <div className="max-w-7xl mx-auto px-4 py-6 flex flex-col sm:flex-row items-center gap-4 justify-between">
+        <div className="flex items-center gap-4">
+          <button
             onClick={() => navigate(-1)}
-            className="hover:text-[#18181B] rounded-full hover:bg-white duration-300 w-9 h-9 p-1"
-          />
-          Popular<small className="text-sm text-zinc-600">({category})</small>
-        </h1>
-        <Topnav />
+            className="p-2 hover:bg-zinc-800 rounded-full transition-colors"
+          >
+            <FaArrowLeft className="w-6 h-6 text-white" />
+          </button>
+          <h1 className="text-2xl font-bold text-white">Popular</h1>
+        </div>
         <DropDown
           title="Category"
           options={["tv", "movie", "all"]}
           func={(e) => setCategory(e.target.value)}
         />
       </div>
-      <InfiniteScroll
-        dataLength={popular.length}
-        next={GetPopular}
-        hasMore={hasMore}
-        loader={<h1>Loading...</h1>}
-      >
-        <Cards data={popular} title={category} />
-      </InfiniteScroll>
+      <div className="max-w-7xl mx-auto px-4">
+        <InfiniteScroll
+          dataLength={popular.length}
+          next={GetPopular}
+          hasMore={hasMore}
+          loader={
+            <div className="flex justify-center py-6">
+              <div className="relative">
+                <div className="w-10 h-10 border-4 border-blue-500/20 rounded-full animate-pulse"></div>
+                <div className="absolute top-0 left-0 w-10 h-10">
+                  <div className="w-10 h-10 border-4 border-transparent border-t-blue-500 rounded-full animate-spin"></div>
+                </div>
+              </div>
+            </div>
+          }
+        >
+          <Cards data={popular} title={category} />
+        </InfiniteScroll>
+      </div>
     </div>
   ) : (
     <Loading />
