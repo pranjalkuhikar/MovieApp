@@ -27,7 +27,7 @@ function Sidenav() {
         className="flex items-center gap-3 p-6 hover:opacity-80 transition-opacity"
       >
         <PiTelevisionSimpleFill className="text-4xl text-blue-500" />
-        <span className="text-2xl font-bold text-white">Movie App</span>
+        <span className="text-2xl font-bold text-white">CineVerse</span>
       </Link>
 
       {/* Main navigation */}
@@ -58,7 +58,7 @@ function Sidenav() {
       {/* Footer */}
       <div className="p-6 border-t border-zinc-800">
         <p className="text-xs text-zinc-500 text-center">
-          © {new Date().getFullYear()} Movie App
+          © {new Date().getFullYear()} CineVerse
         </p>
       </div>
     </div>

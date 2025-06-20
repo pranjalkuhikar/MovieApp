@@ -5,10 +5,8 @@ import { FaPlay } from "react-icons/fa";
 import { IoTrendingUp } from "react-icons/io5";
 import { BiSolidMoviePlay } from "react-icons/bi";
 import { PiTelevisionFill } from "react-icons/pi";
-import Header from "./Template/Header";
 import axios from "../Utiles/Axios";
 import HorizonalCards from "./Template/HorizonalCards";
-import DropDown from "./Template/DropDown";
 import Loading from "./Loading";
 import { motion } from "framer-motion";
 
