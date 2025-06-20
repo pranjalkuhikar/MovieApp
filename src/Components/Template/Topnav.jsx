@@ -99,25 +99,31 @@ function Topnav({ onMenuClick }) {
 
   return (
     <header className="sticky top-0 z-50 bg-zinc-900/95 backdrop-blur-sm border-b border-zinc-800 shadow-lg">
-      <div className="flex items-center h-16 px-4 max-w-7xl mx-auto gap-2 lg:gap-6 justify-between">
-        {/* Menu button - visible on mobile */}
-        <button
-          onClick={onMenuClick}
-          className="lg:hidden inline-flex items-center justify-center p-2 text-zinc-400 hover:text-white hover:bg-zinc-800 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500 rounded-lg transition-colors"
-          aria-label="Open menu"
-        >
-          <HiMenuAlt2 className="h-6 w-6" />
-        </button>
-
-        {/* Logo - visible on mobile */}
+      <div className="flex items-center h-16 px-4 max-w-7xl mx-auto gap-2 lg:gap-6 w-full">
+        {/* Left: menu + logo (mobile) */}
+        <div className="flex items-center gap-2 lg:hidden">
+          <button
+            onClick={onMenuClick}
+            className="inline-flex items-center justify-center p-2 text-zinc-400 hover:text-white hover:bg-zinc-800 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500 rounded-lg transition-colors"
+            aria-label="Open menu"
+          >
+            <HiMenuAlt2 className="h-6 w-6" />
+          </button>
+          <Link
+            to="/"
+            className="flex items-center space-x-2 text-white font-bold text-lg hover:opacity-80 transition-opacity"
+          >
+            <span>CineVerse</span>
+          </Link>
+        </div>
+        {/* Center: logo (desktop) */}
         <Link
           to="/"
-          className="lg:hidden flex items-center space-x-2 text-white font-bold text-lg hover:opacity-80 transition-opacity"
+          className="hidden lg:flex items-center space-x-2 text-white font-bold text-lg hover:opacity-80 transition-opacity"
         >
-          <span>MovieApp</span>
+          <span>CineVerse</span>
         </Link>
-
-        {/* Search bar - desktop */}
+        {/* Desktop search bar */}
         <form
           onSubmit={handleSearch}
           className="hidden lg:flex w-full max-w-xl justify-end"
@@ -182,20 +188,20 @@ function Topnav({ onMenuClick }) {
             )}
           </div>
         </form>
-
-        {/* Mobile search button */}
-        <button
-          onClick={() => setSearchOpen(!searchOpen)}
-          className="lg:hidden p-2 text-zinc-400 hover:text-white hover:bg-zinc-800 rounded-lg transition-colors"
-          aria-label="Search"
-        >
-          {searchOpen ? (
-            <IoClose className="h-6 w-6" />
-          ) : (
-            <IoSearch className="h-6 w-6" />
-          )}
-        </button>
-
+        {/* Mobile search icon at far right */}
+        <div className="ml-auto lg:hidden flex items-center">
+          <button
+            onClick={() => setSearchOpen(!searchOpen)}
+            className="p-2 text-zinc-400 hover:text-white hover:bg-zinc-800 rounded-lg transition-colors"
+            aria-label="Search"
+          >
+            {searchOpen ? (
+              <IoClose className="h-6 w-6" />
+            ) : (
+              <IoSearch className="h-6 w-6" />
+            )}
+          </button>
+        </div>
         {/* Dropdown menu */}
         <div className="flex items-center"></div>
       </div>
